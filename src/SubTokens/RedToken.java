@@ -1,0 +1,38 @@
+package SubTokens;
+
+import Sources.Token;
+
+/**
+ * Created by hyeongminpark on 14. 12. 18..
+ */
+
+public class RedToken extends Token {
+    //기본(12시) 방향 : ↓ 모양
+
+    private String color = "r";
+
+    public String getColor(){
+        return this.color;
+    }
+
+    public void setLaserShootDir() {
+
+        switch (this.getDir()) {
+            case 12:
+                this.addLaserShootDir(6);
+                break;
+            case 3:
+                this.addLaserShootDir(9);
+                break;
+            case 6:
+                this.addLaserShootDir(12);
+                break;
+            case 9:
+                this.addLaserShootDir(3);
+                break;
+            default:
+                System.out.println("invalid variable dir value: " + this.getLaserDetectedDirs());
+                break;
+        }
+    }
+}

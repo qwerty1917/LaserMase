@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/DnDAnother/DnDAnother.iml" filepath="$PROJECT_DIR$/DnDAnother/DnDAnother.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DnDExample/DnDExample.iml" filepath="$PROJECT_DIR$/DnDExample/DnDExample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DndExample2/DnDExample2.iml" filepath="$PROJECT_DIR$/DndExample2/DnDExample2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DnDExample3/DnDExample3.iml" filepath="$PROJECT_DIR$/DnDExample3/DnDExample3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LaserMase.iml" filepath="$PROJECT_DIR$/LaserMase.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PlayGround/PlayGround.iml" filepath="$PROJECT_DIR$/PlayGround/PlayGround.iml" />
+    </modules>
+  </component>
+</project>

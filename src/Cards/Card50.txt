@@ -1,0 +1,19 @@
+//카드번호
+cardNum = 50
+
+//이동가능 토큰 색/타겟
+freeTokens = r n
+freeTokens = p n
+freeTokens = p n
+freeTokens = g n
+
+//타겟 개수
+numOfTargets = 3
+
+//고정된 토큰  색/회전/x/y/타겟/방향
+fixtureTokens = p r 0 0 y 0
+fixtureTokens = y u 3 2 n 12
+fixtureTokens = g u 1 3 n 12
+fixtureTokens = p r 2 3 y 0
+fixtureTokens = k u 3 4 n 0
+fixtureTokens = p r 4 4 y 0
