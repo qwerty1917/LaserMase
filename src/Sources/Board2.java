@@ -9,19 +9,18 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.awt.Graphics;
 
 /**
  * Created by hyeongminpark on 14. 12. 20..
  */
 public class Board2 implements ActionListener{
-    int cardNum = 1;
+    int cardNum = 2;
     int moveOrRotateCount = 0;
 
-    ArrayList<Image> freeTokenImages = new ArrayList<Image>();
     Image[][] fixedTokenImages = new Image[5][5];
 
     Card card;
-//    JPanel tokenLine;
 
     public void go(){
         doMouseSmt();
@@ -40,9 +39,9 @@ public class Board2 implements ActionListener{
     }
 
     public void doMouseSmt(){
-//        tokenUpdate();
         showGUI();
     }
+
     TokensImageDraw draw;
     public void showGUI(){
         JFrame mainFrame = new JFrame("Game Board");
@@ -59,149 +58,20 @@ public class Board2 implements ActionListener{
         mainFrame.pack();
         mainFrame.setSize(500, 660); // 위쪽 바가 20픽셀 차지한다.
         mainFrame.setVisible(true);
-//        mainFrame.repaint();
     }
+
+    ArrayList<String> laserDrawList = new ArrayList<String>();
+
 
     public void actionPerformed(ActionEvent event){
         System.out.println("레이저 버튼 누름");
-        card.shootLaser();
 
-        draw.repaint();
+        laserDrawList = card.shootLaser();
 
-        int firstLaserShootDir=0;
-        int firstLaserShootPosX=0;
-        int firstLaserShootPosY=0;
-
-        class LaserGoing{
-            public int laserDir;
-            public int fromX;
-            public int fromY;
-
-            public LaserGoing(int x,int y,int d){
-                this.laserDir = d;
-                this.fromX = x;
-                this.fromY = y;
-            }
+        for(String i: laserDrawList){
         }
 
-//        ArrayList<LaserGoing> laserGoingList = new ArrayList<LaserGoing>();
-//
-//        int laserMoveCount=0;
-//
-//        for(int i = 0; i<5; i++){
-//            for(int j=0; j<5; j++){
-//                if(card.getTokenTable()[j][i]==null){
-//                    continue;
-//                }
-//                if(card.getTokenTable()[j][i].getColor().equals("r")){
-//                    card.getTokenTable()[j][i].setLaserShootDir();
-//                    System.out.println(card.getTokenTable()[j][i].getLaserShootDirs());
-//                    firstLaserShootDir = card.getTokenTable()[j][i].getLaserShootDirs().get(card.getTokenTable()[j][i].getLaserShootDirs().size()-1);
-//                    firstLaserShootPosX = card.getTokenTable()[j][i].getPosX();
-//                    firstLaserShootPosY = card.getTokenTable()[j][i].getPosY();
-//
-//                    laserGoingList.add(new LaserGoing(firstLaserShootPosX, firstLaserShootPosY, firstLaserShootDir));
-//                }
-//            }
-//        }
-//        System.out.println(firstLaserShootDir);
-//
-//        while(laserMoveCount<30){
-//            ArrayList<LaserGoing> tmpLaserGoingList = new ArrayList<LaserGoing>();
-//
-//            for(int i=0; i<laserGoingList.size(); i++){
-//                LaserGoing tmpLaserGoing;
-//                if(laserGoingList.get(i).laserDir == 12){
-//                    for(int k=laserGoingList.get(i).fromY-1; k>=0; k--){
-//                        if(card.getTokenTable()[k][laserGoingList.get(i).fromX]!=null){
-//                            card.getTokenTable()[k][laserGoingList.get(i).fromX].addLaserDetectedDir(6);
-//
-//                            if(card.getTokenTable()[k][laserGoingList.get(i).fromX].isTarget()){
-//                                System.out.println("////////// Hit!! //////////");
-//                            }
-//
-//                            card.getTokenTable()[k][laserGoingList.get(i).fromX].setLaserShootDir();
-//                            int newLaserDir = card.getTokenTable()[k][laserGoingList.get(i).fromX].getLaserShootDirs().get(card.getTokenTable()[k][laserGoingList.get(i).fromX].getLaserShootDirs().size()-1);
-//
-//                            tmpLaserGoing = new LaserGoing(laserGoingList.get(i).fromX, k, newLaserDir);
-//                            tmpLaserGoingList.add(tmpLaserGoing);
-//                            break;
-//                        }
-//                    }
-//                }else if(laserGoingList.get(i).laserDir == 3){
-//                    for(int k=laserGoingList.get(i).fromX+1; k<5; k++){
-//                        if(card.getTokenTable()[laserGoingList.get(i).fromY][k]!=null){
-//                            card.getTokenTable()[laserGoingList.get(i).fromY][k].addLaserDetectedDir(9);
-//
-//                            if(card.getTokenTable()[laserGoingList.get(i).fromY][k].isTarget()){
-//                                System.out.println("Hit!!");
-//                            }
-//
-//                            card.getTokenTable()[laserGoingList.get(i).fromY][k].setLaserShootDir();
-//                            int newLaserDir = card.getTokenTable()[laserGoingList.get(i).fromY][k].getLaserShootDirs().get(card.getTokenTable()[laserGoingList.get(i).fromY][k].getLaserShootDirs().size()-1);
-//
-//                            tmpLaserGoing = new LaserGoing(k, laserGoingList.get(i).fromY, newLaserDir);
-//                            tmpLaserGoingList.add(tmpLaserGoing);
-//                            break;
-//                        }
-//                    }
-//
-//                }else if(laserGoingList.get(i).laserDir == 6){
-//                    for(int k=laserGoingList.get(i).fromY+1; k<5; k++){
-//                        System.out.println("k: " + k);
-//                        System.out.println("laserGoingList.get(i).fromX: "+ laserGoingList.get(i).fromX);
-//                        if(card.getTokenTable()[k][laserGoingList.get(i).fromX]!=null){
-//                            card.getTokenTable()[k][laserGoingList.get(i).fromX].addLaserDetectedDir(12);
-//
-//                            if(card.getTokenTable()[k][laserGoingList.get(i).fromX].isTarget()){
-//                                System.out.println("Hit!!");
-//                            }
-//
-//                            card.getTokenTable()[k][laserGoingList.get(i).fromX].setLaserShootDir();
-//                            int newLaserDir = card.getTokenTable()[k][laserGoingList.get(i).fromX].getLaserShootDirs().get(card.getTokenTable()[k][laserGoingList.get(i).fromX].getLaserShootDirs().size()-1);
-//
-//                            tmpLaserGoing = new LaserGoing(laserGoingList.get(i).fromX, k, newLaserDir);
-//                            tmpLaserGoingList.add(tmpLaserGoing);
-//                            break;
-//                        }
-//                    }
-//
-//                }else if(laserGoingList.get(i).laserDir == 9){
-//                    for(int k=laserGoingList.get(i).fromX-1; k>=0; k--){
-//                        if(card.getTokenTable()[laserGoingList.get(i).fromY][k]!=null){
-//                            card.getTokenTable()[laserGoingList.get(i).fromY][k].addLaserDetectedDir(3);
-//
-//                            if(card.getTokenTable()[laserGoingList.get(i).fromY][k].isTarget()){
-//                                System.out.println("Hit!!");
-//                            }
-//
-//                            card.getTokenTable()[laserGoingList.get(i).fromY][k].setLaserShootDir();
-//                            int newLaserDir = card.getTokenTable()[laserGoingList.get(i).fromY][k].getLaserShootDirs().get(card.getTokenTable()[laserGoingList.get(i).fromY][k].getLaserShootDirs().size()-1);
-//
-//                            tmpLaserGoing = new LaserGoing(k, laserGoingList.get(i).fromY, newLaserDir);
-//                            tmpLaserGoingList.add(tmpLaserGoing);
-//                            break;
-//                        }
-//                    }
-//
-//                }else{
-//                    System.out.println("이상한 레이저 발사 방향: " + laserGoingList.get(i).laserDir);
-//                }
-//            }
-//            //laserGoinglist 지우고
-//            //tmpLaserGoingList 로 다시 채우기
-//            if(laserGoingList.size() != 0){
-//                System.out.println(" 레이저 도착점중 하나 " +laserGoingList.get(laserGoingList.size()-1).fromX + " " + laserGoingList.get(laserGoingList.size()-1).fromY);
-//            }else{
-//                System.out.println(" laserGoingList 비었음");
-//            }
-//            laserGoingList.clear();
-//            for(int i=0; i<tmpLaserGoingList.size(); i++){
-//                laserGoingList.add(tmpLaserGoingList.get(i));
-//            }
-//
-//            laserMoveCount++;
-//        }
+        draw.repaint();
 
     }
 
@@ -218,10 +88,6 @@ public class Board2 implements ActionListener{
             addMouseListener(this);
             addMouseMotionListener(this);
             this.card = card;
-        }
-
-        public void controlVhange(MouseEvent e){
-            repaint();
         }
 
         public Token guessToken(int x, int y){
@@ -257,8 +123,6 @@ public class Board2 implements ActionListener{
                     token.rotate();
                     moveOrRotateCount++;
                     card.laserGoingList.clear();
-//                    this.image = rotate(this.image);
-//                    repaint();
                 }else{
                     System.out.println("this token set unrotatable");
                 }
@@ -336,9 +200,6 @@ public class Board2 implements ActionListener{
         public void mouseMoved(MouseEvent e) {}
 
         public void paintComponent(Graphics g){
-//            System.out.println("paintComponent 들어옴");
-//            Image image2 = new ImageIcon("../images/TokenBlack.png").getImage();
-//            g.drawImage(image2, 0, 0, this);
 
             //free토큰을 우선 한줄로 그림
             for(int i = 0; i < card.getFreeTokenTable().length; i++){
@@ -382,6 +243,7 @@ public class Board2 implements ActionListener{
                             image = setTokenImageDir(image, token);
                             g.drawImage(image, i * 100, 0, this);
                         }
+
                     }catch (IOException ex){
                         ex.printStackTrace();
                     }
@@ -446,9 +308,79 @@ public class Board2 implements ActionListener{
                 }
             }
 
-//            System.out.println("moveOrRotateCount count: " + moveOrRotateCount);
+            //이제 레이저를 그리자!
+            for (String line : laserDrawList){
+                String[] sArr = line.split("/");
+                for(Card.LaserGoing laserGoing: card.laserGoingFullPath){
+                    int sx, sy, ex, ey;
+                    if(laserGoing.laserDir==12){
+                        int x = laserGoing.fromX;
+                        sx=laserGoing.fromX*100+50;
+                        sy=laserGoing.fromY*100+50;
+                        ex=laserGoing.fromX*100+50;
+                        ey=laserGoing.fromY*100+50;
+                        for(int y = laserGoing.fromY-1; y>=0; y--){
+                            if(card.getTokenTable()[y][x]!=null){
+                                ey=y*100+50;
+                                break;
+                            }
+                        }
 
+                    }else if(laserGoing.laserDir==3){
+                        int y = laserGoing.fromY;
+                        sx=laserGoing.fromX*100+50;
+                        sy=laserGoing.fromY*100+50;
+                        ex=laserGoing.fromX*100+50;
+                        ey=laserGoing.fromY*100+50;
+                        for(int x = laserGoing.fromX+1; x<5; x++){
+                            if(card.getTokenTable()[y][x]!=null){
+                                ex=x*100+50;
+                                break;
+                            }
+                        }
+
+                    }else if(laserGoing.laserDir==6){
+                        int x = laserGoing.fromX;
+                        sx=laserGoing.fromX*100+50;
+                        sy=laserGoing.fromY*100+50;
+                        ex=laserGoing.fromX*100+50;
+                        ey=laserGoing.fromY*100+50;
+                        for(int y = laserGoing.fromY+1; y<5; y++){
+                            if(card.getTokenTable()[y][x]!=null){
+                                ey=y*100+50;
+                                break;
+                            }
+                        }
+
+                    }else if(laserGoing.laserDir==9){
+                        int y = laserGoing.fromY;
+                        sx=laserGoing.fromX*100+50;
+                        sy=laserGoing.fromY*100+50;
+                        ex=laserGoing.fromX*100+50;
+                        ey=laserGoing.fromY*100+50;
+                        for(int x = laserGoing.fromX-1; x>=0; x--){
+                            if(card.getTokenTable()[y][x]!=null){
+                                ex=x*100+50;
+                                break;
+                            }
+                        }
+
+                    }else{
+                        sx=0;
+                        sy=0;
+                        ex=0;
+                        ey=0;
+                    }
+                    // 제일 윗줄이 공간을 차지하기에 한칸씩 내려준다
+                    g.setColor(Color.red);
+                    g.drawLine(sx, sy+100, ex, ey+100);
+                }
+            }
         }
+
+//        public int getLaserEndPointX(Token token){
+//
+//        }
 
         public Image setTokenImageDir(Image image, Token token){
             if(token.getDir()==12){
@@ -460,7 +392,6 @@ public class Board2 implements ActionListener{
             }else if(token.getDir()==9){
                 return rotate(rotate(rotate(image)));
             }else{
-//                System.out.println("token.getDir 에서 이상한 값 받음;; : " + token.getDir());
                 return image;
             }
         }

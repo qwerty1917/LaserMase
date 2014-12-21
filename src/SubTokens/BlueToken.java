@@ -21,16 +21,16 @@ public class BlueToken extends Token {
             if (getDir() == 12 || getDir() == 6) {
                 switch (laserDetectedDir) {
                     case 12:
-                        this.addLaserShootDir(3);
-                        break;
-                    case 3:
-                        this.addLaserShootDir(12);
-                        break;
-                    case 6:
                         this.addLaserShootDir(9);
                         break;
-                    case 9:
+                    case 3:
                         this.addLaserShootDir(6);
+                        break;
+                    case 6:
+                        this.addLaserShootDir(3);
+                        break;
+                    case 9:
+                        this.addLaserShootDir(12);
                         break;
                     default:
                         System.out.println("invalid variable dir value: " + this.getLaserDetectedDirs());
@@ -39,16 +39,16 @@ public class BlueToken extends Token {
             } else {
                 switch (laserDetectedDir) {
                     case 12:
-                        this.addLaserShootDir(9);
-                        break;
-                    case 3:
-                        this.addLaserShootDir(6);
-                        break;
-                    case 6:
                         this.addLaserShootDir(3);
                         break;
-                    case 9:
+                    case 3:
                         this.addLaserShootDir(12);
+                        break;
+                    case 6:
+                        this.addLaserShootDir(9);
+                        break;
+                    case 9:
+                        this.addLaserShootDir(6);
                         break;
                     default:
                         System.out.println("invalid variable dir value: " + this.getLaserDetectedDirs());

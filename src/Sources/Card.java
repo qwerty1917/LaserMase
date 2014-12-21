@@ -239,7 +239,7 @@ public class Card {
     public void plotBoard(){
         for(int i=0; i<5; i++){
             if(freeTokenTable[i]==null){
-                System.out.print("0");
+                System.out.print("X");
             }else{
                 System.out.print(freeTokenTable[i].getColor());
             }
@@ -248,14 +248,14 @@ public class Card {
         for(int i=0; i<5; i++){
             for(int j=0; j<5; j++){
                 if(tokenTable[i][j]==null){
-                    System.out.print("0");
+                    System.out.print("X");
                 }else{
                     System.out.print(tokenTable[i][j].getColor());
                 }
             }
             System.out.print("\n");
         }
-        System.out.println(count);
+        System.out.println("count: " + count);
         count++;
     }
 
@@ -273,7 +273,13 @@ public class Card {
         }
     }
 
-    public void shootLaser(){
+    ArrayList<LaserGoing> laserGoingFullPath = new ArrayList<LaserGoing>();
+    ArrayList<String> laserDrawList = new ArrayList<String>();
+
+
+    public ArrayList<String> shootLaser(){
+        laserGoingFullPath.clear();
+//        ArrayList<String> laserDrawList = new ArrayList<String>();
 
         //// 빨간토큰 찾아서 레이저 정보 추가한다.
         for(int i=0; i<5; i++){
@@ -295,7 +301,7 @@ public class Card {
                 for(int i=0; i<5; i++){
                     for(int j=0; j<5; j++){
                         if(laserGoingList.get(k).fromX==j && laserGoingList.get(k).fromY==i){
-                            System.out.print("0");
+                            System.out.print("O");
                         }else{
                             System.out.print("X");
                         }
@@ -305,10 +311,13 @@ public class Card {
                 System.out.println("======");
             }
 
-            reflectLaser();
 
+            laserDrawList.addAll(reflectLaser());
 
         }
+
+
+
 
         //모든 칸칸마다 초기화
         for(int i=0; i<5; i++){
@@ -321,11 +330,16 @@ public class Card {
             }
         }
 
+        return laserDrawList;
+
     }
+
+//    ArrayList<String> laserDrawList = new ArrayList<String>();
+
 
     int reflectCount;
 
-    public void reflectLaser(){
+    public ArrayList<String> reflectLaser(){
         reflectCount++;
 
         ArrayList<LaserGoing> tmpLaserGoingList = new ArrayList<LaserGoing>();
@@ -359,7 +373,7 @@ public class Card {
                         System.out.println("좌표: x: "+x + " y: "+ y);
                         System.out.println("hit?: "+ tokenTable[y][x].isHit());
                         System.out.println("reflect setting → ..");
-                        System.out.println("==이까지\n==");
+                        System.out.println("==이까지==\n");
 
                     }
                 }
@@ -380,7 +394,7 @@ public class Card {
                         System.out.println("좌표: x: "+x + " y: "+ y);
                         System.out.println("hit?: "+ tokenTable[y][x].isHit());
                         System.out.println("reflect setting ↓ ..");
-                        System.out.println("==이까지\n==");
+                        System.out.println("==이까지==\n");
 
 
                     }
@@ -402,7 +416,7 @@ public class Card {
                         System.out.println("좌표: x: "+x + " y: "+ y);
                         System.out.println("hit?: "+ tokenTable[y][x].isHit());
                         System.out.println("reflect setting → ..");
-                        System.out.println("==이까지\n==");
+                        System.out.println("==이까지==\n");
 
 
                     }
@@ -424,7 +438,7 @@ public class Card {
                         System.out.println("좌표: x: "+x + " y: "+ y);
                         System.out.println("hit?: "+ tokenTable[y][x].isHit());
                         System.out.println("reflect setting ↑ ..");
-                        System.out.println("==이까지\n==");
+                        System.out.println("==이까지==\n");
 
 
                     }
@@ -456,7 +470,9 @@ public class Card {
                         System.out.println("hitToken: "+i+" "+j);
 
                         if(hitCount == numOfTargets){
+                            System.out.println("================");
                             System.out.println("====== WIN =====");
+                            System.out.println("================");
                         }
                     }
 
@@ -468,13 +484,118 @@ public class Card {
                 }
             }
         }
+
+        //////////////////////
+//        ArrayList<String> laserDrawList = new ArrayList<String>();
+
+        //게임판의 모든 칸을 살펴서
+        for(int y = 0; y<5; y++){
+            for(int x = 0; x<5; x++){
+
+                //토큰이 있으면
+                if(tokenTable[y][x]!=null){
+                    ArrayList<Integer> laserShootDirs = tokenTable[y][x].getLaserShootDirs();
+
+                    //레이저를 쏘고 있다면 각 레이저마다 스트링으로 추가해줌
+                    for(int laserShootDir : laserShootDirs){
+                        String laserDraw = "";
+                        if(laserShootDir==12){
+                            laserDraw = "";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX());
+                        }else if(laserShootDir==3){
+                            laserDraw = "";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+100) + "/";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50);
+                        }else if(laserShootDir==6){
+                            laserDraw = "";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+100);
+                        }else if(laserShootDir==9){
+                            laserDraw = "";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY() + "/");
+                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50);
+                        }else{
+                            System.out.println("이상한 laserShootDir 값: "+laserShootDir);
+                        }
+                        laserDrawList.add(laserDraw);
+
+                        System.out.println("laserDraw" +laserDraw);
+                    }
+                }
+            }
+        }
+        ///////////////////
+
+        laserGoingFullPath.addAll(laserGoingList);
         laserGoingList.clear();
         for(int i=0; i<tmpLaserGoingList.size(); i++){
             laserGoingList.add(tmpLaserGoingList.get(i));
         }
 
-        System.out.println("reflect 횟수: " + reflectCount);
+
+        return laserDrawList;
     }
+
+//    public ArrayList<String> makeLaserDrawList(){
+//        ArrayList<String> laserDrawList = new ArrayList<String>();
+//
+//        //게임판의 모든 칸을 살펴서
+//        for(int y = 0; y<5; y++){
+//            for(int x = 0; x<5; x++){
+//
+//                //토큰이 있으면
+//                if(tokenTable[y][x]!=null){
+//                    ArrayList<Integer> laserShootDirs = tokenTable[y][x].getLaserShootDirs();
+//                    System.out.println("laserShootDirs size " + laserShootDirs.size());
+//
+//                    //레이저를 쏘고 있다면 각 레이저마다 스트링으로 추가해줌
+//                    for(int laserShootDir : laserShootDirs){
+//                        String laserDraw = "";
+//                        if(laserShootDir==12){
+//                            laserDraw = "";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY());
+//                        }else if(laserShootDir==3){
+//                            laserDraw = "";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+100) + "/";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50);
+//                        }else if(laserShootDir==6){
+//                            laserDraw = "";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+100);
+//                        }else if(laserShootDir==9){
+//                            laserDraw = "";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()) + "/";
+//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50);
+//                        }else{
+//                            System.out.println("이상한 laserShootDir 값: "+laserShootDir);
+//                        }
+//                        laserDrawList.add(laserDraw);
+//                    }
+//                }
+//            }
+//        }
+//
+//        return laserDrawList;
+//    }
+
 
 
 }
