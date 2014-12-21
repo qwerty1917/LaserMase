@@ -79,14 +79,6 @@ public class Card {
         return tokenTable;
     }
 
-    public ArrayList<Token> getFreeTokens(){
-        return freeTokens;
-    }
-
-    public ArrayList<Token> getFixtureTokens(){
-        return fixtureTokens;
-    }
-
     public void insertFreeToknToTable(Token token, int x, int y){
         tokenTable[y][x]=token;
     }
@@ -274,12 +266,10 @@ public class Card {
     }
 
     ArrayList<LaserGoing> laserGoingFullPath = new ArrayList<LaserGoing>();
-    ArrayList<String> laserDrawList = new ArrayList<String>();
+    boolean isWin = false;
 
-
-    public ArrayList<String> shootLaser(){
+    public void shootLaser(){
         laserGoingFullPath.clear();
-//        ArrayList<String> laserDrawList = new ArrayList<String>();
 
         //// 빨간토큰 찾아서 레이저 정보 추가한다.
         for(int i=0; i<5; i++){
@@ -310,14 +300,8 @@ public class Card {
                 }
                 System.out.println("======");
             }
-
-
-            laserDrawList.addAll(reflectLaser());
-
+            reflectLaser();
         }
-
-
-
 
         //모든 칸칸마다 초기화
         for(int i=0; i<5; i++){
@@ -330,16 +314,13 @@ public class Card {
             }
         }
 
-        return laserDrawList;
 
     }
-
-//    ArrayList<String> laserDrawList = new ArrayList<String>();
 
 
     int reflectCount;
 
-    public ArrayList<String> reflectLaser(){
+    public void reflectLaser(){
         reflectCount++;
 
         ArrayList<LaserGoing> tmpLaserGoingList = new ArrayList<LaserGoing>();
@@ -473,6 +454,7 @@ public class Card {
                             System.out.println("================");
                             System.out.println("====== WIN =====");
                             System.out.println("================");
+                            isWin = true;
                         }
                     }
 
@@ -485,117 +467,10 @@ public class Card {
             }
         }
 
-        //////////////////////
-//        ArrayList<String> laserDrawList = new ArrayList<String>();
-
-        //게임판의 모든 칸을 살펴서
-        for(int y = 0; y<5; y++){
-            for(int x = 0; x<5; x++){
-
-                //토큰이 있으면
-                if(tokenTable[y][x]!=null){
-                    ArrayList<Integer> laserShootDirs = tokenTable[y][x].getLaserShootDirs();
-
-                    //레이저를 쏘고 있다면 각 레이저마다 스트링으로 추가해줌
-                    for(int laserShootDir : laserShootDirs){
-                        String laserDraw = "";
-                        if(laserShootDir==12){
-                            laserDraw = "";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX());
-                        }else if(laserShootDir==3){
-                            laserDraw = "";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+100) + "/";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50);
-                        }else if(laserShootDir==6){
-                            laserDraw = "";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+100);
-                        }else if(laserShootDir==9){
-                            laserDraw = "";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY() + "/");
-                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50);
-                        }else{
-                            System.out.println("이상한 laserShootDir 값: "+laserShootDir);
-                        }
-                        laserDrawList.add(laserDraw);
-
-                        System.out.println("laserDraw" +laserDraw);
-                    }
-                }
-            }
-        }
-        ///////////////////
-
         laserGoingFullPath.addAll(laserGoingList);
         laserGoingList.clear();
         for(int i=0; i<tmpLaserGoingList.size(); i++){
             laserGoingList.add(tmpLaserGoingList.get(i));
         }
-
-
-        return laserDrawList;
     }
-
-//    public ArrayList<String> makeLaserDrawList(){
-//        ArrayList<String> laserDrawList = new ArrayList<String>();
-//
-//        //게임판의 모든 칸을 살펴서
-//        for(int y = 0; y<5; y++){
-//            for(int x = 0; x<5; x++){
-//
-//                //토큰이 있으면
-//                if(tokenTable[y][x]!=null){
-//                    ArrayList<Integer> laserShootDirs = tokenTable[y][x].getLaserShootDirs();
-//                    System.out.println("laserShootDirs size " + laserShootDirs.size());
-//
-//                    //레이저를 쏘고 있다면 각 레이저마다 스트링으로 추가해줌
-//                    for(int laserShootDir : laserShootDirs){
-//                        String laserDraw = "";
-//                        if(laserShootDir==12){
-//                            laserDraw = "";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY());
-//                        }else if(laserShootDir==3){
-//                            laserDraw = "";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+100) + "/";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50);
-//                        }else if(laserShootDir==6){
-//                            laserDraw = "";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+100);
-//                        }else if(laserShootDir==9){
-//                            laserDraw = "";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50) + "/";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()+50) + "/";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosX()) + "/";
-//                            laserDraw = laserDraw + String.valueOf(100*tokenTable[y][x].getPosY()+50);
-//                        }else{
-//                            System.out.println("이상한 laserShootDir 값: "+laserShootDir);
-//                        }
-//                        laserDrawList.add(laserDraw);
-//                    }
-//                }
-//            }
-//        }
-//
-//        return laserDrawList;
-//    }
-
-
-
 }
