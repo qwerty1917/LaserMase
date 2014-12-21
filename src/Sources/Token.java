@@ -42,6 +42,7 @@ public class Token {
 
         if(x>=0 && x<=5){
             this.posX = x;
+            System.out.println("token moved: "+ x);
         }else{
             System.out.println("invalid value: "+ x + " inputted");
         }
@@ -57,6 +58,7 @@ public class Token {
 
         if(y>=0 && y<=5){
             this.posY = y;
+            System.out.println("token moved: "+ y);
         }else{
             System.out.println("invalid value: " + y + " inputted");
         }
@@ -169,7 +171,13 @@ public class Token {
         this.laserDetectedDirs.clear();
     }
 
+    public void setLaserShootDir(){
 
+    }
+
+    public boolean isHit(){return false;}
+
+    public void setHitOrNot(boolean b){}
 
     //
     //// 레이저를 반사하거나 발사할 방향과 관련된 메소드. 하위 클래스의 setLaserShootDir() 의해 통제된다.
@@ -189,6 +197,10 @@ public class Token {
 
     public void clearLaserShootDirs(){
         this.laserShootDirs.clear();
+    }
+
+    public boolean isTarget(){
+        return false;
     }
 
 

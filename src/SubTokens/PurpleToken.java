@@ -122,6 +122,7 @@ public class PurpleToken extends Token {
         isTarget = true;
     }
 
+    @Override
     public boolean isTarget(){
         return isTarget;
     }
@@ -132,5 +133,9 @@ public class PurpleToken extends Token {
         }else{
             return false;
         }
+    }
+
+    public void setHitOrNot(boolean b){
+
     }
 }

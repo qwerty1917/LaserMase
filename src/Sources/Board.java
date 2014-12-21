@@ -96,7 +96,7 @@ public class Board extends JPanel{
                     }else{
                         System.out.println("invalid color key inputted: " + card.getTokenTable()[i][j].getColor());
                     }
-//            fixedTokenImages.add(new DTPicture(createImageIcon("../images/" + tokenNameList[i], tokenNameList[i]).getImage()));
+//            freeTokenImages.add(new DTPicture(createImageIcon("../images/" + tokenNameList[i], tokenNameList[i]).getImage()));
                     fixedTokenImages.get(fixedTokenImages.size() - 1).setTransferHandler(picHandler);
                     imageTable.add(fixedTokenImages.get(fixedTokenImages.size() - 1));
                 }else{
@@ -177,7 +177,7 @@ class DTPicture extends Picture implements MouseMotionListener {
             if(token.getRotateAble()){
                 token.rotate();
                 this.image = rotate(this.image);
-                this.repaint();
+                repaint();
             }else{
                 System.out.println("this token set unrotatable");
             }

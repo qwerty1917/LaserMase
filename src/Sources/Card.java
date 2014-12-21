@@ -14,6 +14,7 @@ import java.io.*;
 public class Card {
     private int cardNum; // 카드번호
     private ArrayList<Token> freeTokens = new ArrayList<Token>(); // free 토큰
+    private Token[] freeTokenTable = new Token[5]; // 게임을 진행할 free토큰 라인
     private int numOfTargets; // 타겟 개수
     private ArrayList<Token> fixtureTokens = new ArrayList<Token>(); // fixture 토큰
     private Token[][] tokenTable = new Token[5][5]; // 게임을 진행할 토큰테이블
@@ -55,6 +56,10 @@ public class Card {
                     this.readFixtureTokens(sArr);
             }
 
+            for(int i=0; i<freeTokens.size(); i++){
+                freeTokenTable[i]=freeTokens.get(i);
+            }
+
             // 고정 토큰 리스트를 참조하여 tokenTable에 추가한다.
             for(int i=0; i<fixtureTokens.size(); i++){
                 tokenTable[fixtureTokens.get(i).getPosY()][fixtureTokens.get(i).getPosX()] = fixtureTokens.get(i);
@@ -64,6 +69,10 @@ public class Card {
             ex.printStackTrace();
         }
 
+    }
+
+    public Token[] getFreeTokenTable(){
+        return freeTokenTable;
     }
 
     public Token[][] getTokenTable(){
@@ -76,6 +85,18 @@ public class Card {
 
     public ArrayList<Token> getFixtureTokens(){
         return fixtureTokens;
+    }
+
+    public void insertFreeToknToTable(Token token, int x, int y){
+        tokenTable[y][x]=token;
+    }
+
+    public void removeTokenFromLine(int x){
+        freeTokenTable[x]=null;
+    };
+
+    public void removeTokenfromTable(int x, int y){
+        tokenTable[y][x] = null;
     }
 
     //카드 번호를 읽어와서 cardNum에 저장
@@ -217,6 +238,14 @@ public class Card {
     private int count = 1;
     public void plotBoard(){
         for(int i=0; i<5; i++){
+            if(freeTokenTable[i]==null){
+                System.out.print("0");
+            }else{
+                System.out.print(freeTokenTable[i].getColor());
+            }
+        }
+        System.out.println("\n=====");
+        for(int i=0; i<5; i++){
             for(int j=0; j<5; j++){
                 if(tokenTable[i][j]==null){
                     System.out.print("0");
@@ -229,5 +258,223 @@ public class Card {
         System.out.println(count);
         count++;
     }
+
+    ArrayList<LaserGoing> laserGoingList = new ArrayList<LaserGoing>();
+
+    class LaserGoing{
+        public int laserDir;
+        public int fromX;
+        public int fromY;
+
+        public LaserGoing(int x,int y,int d){
+            this.laserDir = d;
+            this.fromX = x;
+            this.fromY = y;
+        }
+    }
+
+    public void shootLaser(){
+
+        //// 빨간토큰 찾아서 레이저 정보 추가한다.
+        for(int i=0; i<5; i++){
+            for(int j=0; j<5; j++){
+                if(tokenTable[j][i]==null){
+                    continue;
+                }
+                if(tokenTable[j][i].getColor().equals("r")){
+                    System.out.println("빨간토큰 찾음!: " + i + " "+ j);
+                    tokenTable[j][i].setLaserShootDir();
+                    laserGoingList.add(new LaserGoing(i, j,
+                            tokenTable[j][i].getLaserShootDirs().get(tokenTable[j][i].getLaserShootDirs().size()-1)));
+                    System.out.println("레이저 진행방향 "+tokenTable[j][i].getLaserShootDirs().get(tokenTable[j][i].getLaserShootDirs().size()-1));
+                }
+            }
+        }
+        while(laserGoingList.size()>0){
+            for(int k=0; k<laserGoingList.size(); k++){
+                for(int i=0; i<5; i++){
+                    for(int j=0; j<5; j++){
+                        if(laserGoingList.get(k).fromX==j && laserGoingList.get(k).fromY==i){
+                            System.out.print("0");
+                        }else{
+                            System.out.print("X");
+                        }
+                    }
+                    System.out.print("\n");
+                }
+                System.out.println("======");
+            }
+
+            reflectLaser();
+
+
+        }
+
+        //모든 칸칸마다 초기화
+        for(int i=0; i<5; i++){
+            for(int j=0; j<5; j++){
+                if(tokenTable[i][j]==null){
+                    continue;
+                }
+                tokenTable[i][j].clearLaserDetectedDirs();
+                tokenTable[i][j].clearLaserShootDirs();
+            }
+        }
+
+    }
+
+    int reflectCount;
+
+    public void reflectLaser(){
+        reflectCount++;
+
+        ArrayList<LaserGoing> tmpLaserGoingList = new ArrayList<LaserGoing>();
+
+        for(int i=0; i<5; i++){
+            for(int j=0; j<5; j++){
+                if(tokenTable[i][j]==null){
+                    continue;
+                }
+                tokenTable[i][j].clearLaserDetectedDirs();
+                tokenTable[i][j].clearLaserShootDirs();
+            }
+        }
+
+        //현재 시점의 각각의 레이저 경로(경로 여러개일때 대비하여) 에 대해 순환문
+        for(int i=0; i<laserGoingList.size(); i++){
+
+            if(laserGoingList.get(i).laserDir==3){
+                //레이저가 3시방향을 향할때
+
+                int y = laserGoingList.get(i).fromY;
+
+                //레이저 방향대로 따라가며 토큰이 있는지 탐색
+                for(int x = laserGoingList.get(i).fromX+1; x<5; x++){
+                    if(tokenTable[y][x]!=null){
+                        tokenTable[y][x].addLaserDetectedDir(9);
+                        tokenTable[y][x].setLaserShootDir();
+
+                        System.out.println("\n==레이저 경로상 발결된 토큰==");
+                        System.out.println("color is: "+ tokenTable[y][x].getColor());
+                        System.out.println("좌표: x: "+x + " y: "+ y);
+                        System.out.println("hit?: "+ tokenTable[y][x].isHit());
+                        System.out.println("reflect setting → ..");
+                        System.out.println("==이까지\n==");
+
+                    }
+                }
+
+            }else if(laserGoingList.get(i).laserDir==6){
+                //레이저가 6시방향을 향할때
+
+                int x = laserGoingList.get(i).fromX;
+
+                //레이저 방향대로 따라가며 토큰이 있는지 탐색
+                for(int y = laserGoingList.get(i).fromY+1; y<5; y++){
+                    if(tokenTable[y][x]!=null){
+                        tokenTable[y][x].addLaserDetectedDir(12);
+                        tokenTable[y][x].setLaserShootDir();
+
+                        System.out.println("\n==레이저 경로상 발결된 토큰==");
+                        System.out.println("color is: "+ tokenTable[y][x].getColor());
+                        System.out.println("좌표: x: "+x + " y: "+ y);
+                        System.out.println("hit?: "+ tokenTable[y][x].isHit());
+                        System.out.println("reflect setting ↓ ..");
+                        System.out.println("==이까지\n==");
+
+
+                    }
+                }
+
+            }else if(laserGoingList.get(i).laserDir==9){
+                //레이저가 9시방향을 향할때
+
+                int y = laserGoingList.get(i).fromY;
+
+                //레이저 방향대로 따라가며 토큰이 있는지 탐색
+                for(int x = laserGoingList.get(i).fromX-1; x>=0; x--){
+                    if(tokenTable[y][x]!=null){
+                        tokenTable[y][x].addLaserDetectedDir(3);
+                        tokenTable[y][x].setLaserShootDir();
+
+                        System.out.println("\n==레이저 경로상 발결된 토큰==");
+                        System.out.println("color is: "+ tokenTable[y][x].getColor());
+                        System.out.println("좌표: x: "+x + " y: "+ y);
+                        System.out.println("hit?: "+ tokenTable[y][x].isHit());
+                        System.out.println("reflect setting → ..");
+                        System.out.println("==이까지\n==");
+
+
+                    }
+                }
+
+            }else if(laserGoingList.get(i).laserDir==12){
+                //레이저가 12시방향을 향할때
+
+                int x = laserGoingList.get(i).fromX;
+
+                //레이저 방향대로 따라가며 토큰이 있는지 탐색
+                for(int y = laserGoingList.get(i).fromY-1; y>=0; y--){
+                    if(tokenTable[y][x]!=null){
+                        tokenTable[y][x].addLaserDetectedDir(6);
+                        tokenTable[y][x].setLaserShootDir();
+
+                        System.out.println("\n==레이저 경로상 발결된 토큰==");
+                        System.out.println("color is: " + tokenTable[y][x].getColor());
+                        System.out.println("좌표: x: "+x + " y: "+ y);
+                        System.out.println("hit?: "+ tokenTable[y][x].isHit());
+                        System.out.println("reflect setting ↑ ..");
+                        System.out.println("==이까지\n==");
+
+
+                    }
+                }
+
+            }else{
+                System.out.println("이상한 레이저 사입각: " + laserGoingList.get(i).laserDir);
+            }
+
+
+        }
+
+        int hitCount = 0;
+
+        //모든 칸칸마다
+        for(int i=0; i<5; i++){
+            for(int j=0; j<5; j++){
+
+                //만약 토큰이 있다면
+                if(tokenTable[j][i]!=null){
+                    LaserGoing tmpLaserGoing;
+
+                    if(tokenTable[j][i].isTarget()){
+                        System.out.println("found target");
+                    }
+                    if(tokenTable[j][i].isHit()){
+                        hitCount++;
+                        System.out.println("=====Hit "+hitCount+" target(s)====");
+                        System.out.println("hitToken: "+i+" "+j);
+
+                        if(hitCount == numOfTargets){
+                            System.out.println("====== WIN =====");
+                        }
+                    }
+
+                    //토큰이 레이저를 보낼 모든 방향으로 새로운 laserGoing 설정
+                    for (int d : tokenTable[j][i].getLaserShootDirs()){
+                        tmpLaserGoing = new LaserGoing(i, j, d);
+                        tmpLaserGoingList.add(tmpLaserGoing);
+                    }
+                }
+            }
+        }
+        laserGoingList.clear();
+        for(int i=0; i<tmpLaserGoingList.size(); i++){
+            laserGoingList.add(tmpLaserGoingList.get(i));
+        }
+
+        System.out.println("reflect 횟수: " + reflectCount);
+    }
+
 
 }
