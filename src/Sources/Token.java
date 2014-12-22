@@ -36,13 +36,13 @@ public class Token {
 
         //고정 토큰인 경우 움직일 수 없다.
         if(this.moveAble == false){
-            System.out.println("cannot move fixture tiken");
+            System.out.println("cannot move fixture token");
             return;
         }
 
         if(x>=0 && x<=5){
             this.posX = x;
-            System.out.println("token moved: "+ x);
+//            System.out.println("token moved: "+ x);
         }else{
             System.out.println("invalid value: "+ x + " inputted");
         }
@@ -52,13 +52,13 @@ public class Token {
 
         //고정 토큰인 경우 움직일 수 없다.
         if(this.moveAble == false){
-            System.out.println("cannot move fixture tiken");
+            System.out.println("cannot move fixture token");
             return;
         }
 
         if(y>=0 && y<=5){
             this.posY = y;
-            System.out.println("token moved: "+ y);
+//            System.out.println("token moved: "+ y);
         }else{
             System.out.println("invalid value: " + y + " inputted");
         }
@@ -118,7 +118,7 @@ public class Token {
                 System.out.println("invalid variable dir value: " + this.dir);
                 break;
         }
-        System.out.println("rotate: "+ this.dir);
+//        System.out.println("rotate: "+ this.dir);
     }
 
 
@@ -191,9 +191,7 @@ public class Token {
         }
     }
 
-    public ArrayList<Integer> getLaserShootDirs(){
-        return this.laserShootDirs;
-    }
+    public ArrayList<Integer> getLaserShootDirs(){ return this.laserShootDirs; }
 
     public void clearLaserShootDirs(){
         this.laserShootDirs.clear();
