@@ -1,0 +1,17 @@
+//카드번호
+cardNum = 5
+
+//이동가능 토큰 색/타겟
+
+
+//타겟 개수
+numOfTargets = 2
+
+//고정된 토큰  색/회전/x/y/타겟/방향
+fixtureTokens = p u 1 0 y 6
+fixtureTokens = p u 4 3 y 9
+fixtureTokens = k u 1 4 n 12
+fixtureTokens = r u 0 3 n 9
+fixtureTokens = g u 1 3 n 3
+
+

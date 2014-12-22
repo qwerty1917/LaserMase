@@ -9,12 +9,13 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.awt.Graphics;
+import java.util.Arrays;
 
 
 /**
  * Created by hyeongminpark on 14. 12. 20..
  */
-public class Board implements ActionListener{
+public class Board{
     int cardNum;
     int moveOrRotateCount = 0;
 
@@ -32,46 +33,28 @@ public class Board implements ActionListener{
 
         String cardFileDir = "./src/Cards/Card" + cardNum + ".txt";
         card = new Card(cardFileDir);
-//        card.plotBoard();
+        card.plot();
     }
 
     TokensImageDraw draw;
+    JFrame mainFrame = new JFrame("Game Board");
     public void showGUI(){
         String targetInfo = "number of target: " + card.getNumOfTargets();
         JOptionPane.showMessageDialog(null, targetInfo);
 
-        JFrame mainFrame = new JFrame("Game Board");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
         draw = new TokensImageDraw(card);
-        JButton laserButton = new JButton("shoot Laser");
-        laserButton.addActionListener(this);
-
         mainFrame.getContentPane().add(BorderLayout.CENTER, draw);
-        mainFrame.getContentPane().add(BorderLayout.SOUTH, laserButton);
 
         mainFrame.pack();
         mainFrame.setSize(500, 660); // 위쪽 바가 20픽셀 차지한다.
         mainFrame.setVisible(true);
     }
 
-
-
-    public void actionPerformed(ActionEvent event){
-        System.out.println("레이저 버튼 누름");
-
-        card.shootLaser();
-
-        draw.repaint();
-
-        if(card.isWin){
-            JOptionPane.showMessageDialog(null, "Win !!!");
-        }
-    }
-
     class TokensImageDraw extends JPanel implements MouseListener, MouseMotionListener{
         private Card card;
+//        JButton dd;
 
         int sX = 0, sY = 0;
         boolean dragging = false;
@@ -82,6 +65,141 @@ public class Board implements ActionListener{
             addMouseListener(this);
             addMouseMotionListener(this);
             this.card = card;
+
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.setBackground(Color.darkGray);
+
+            JButton laserButton = new JButton("shoot Laser");
+            JButton refreshButton = new JButton("retry");
+            JButton solutionButton = new JButton("solution");
+            JButton quitButton = new JButton("quit");
+
+            laserButton.addActionListener(new laserListener());
+            refreshButton.addActionListener(new refreshListener());
+            solutionButton.addActionListener(new solutionListener());
+            quitButton.addActionListener(new quitListener());
+
+            buttonPanel.add(laserButton);
+            buttonPanel.add(refreshButton);
+            buttonPanel.add(solutionButton);
+            buttonPanel.add(quitButton);
+
+            this.add(BorderLayout.SOUTH, buttonPanel);
+        }
+
+        String[] cardList = {"1","2","4","5","20","50"};
+
+        JLabel cardLabel;
+        JFrame frame = new JFrame();
+        public void go(){
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            JPanel panel = new JPanel();
+            panel.setBackground(Color.darkGray);
+
+            JButton decideButton = new JButton("play");
+            JButton beforeButton = new JButton("←");
+            JButton nextButton = new JButton("→");
+
+            decideButton.addActionListener(new dicisionListener());
+            beforeButton.addActionListener(new beforeListener());
+            nextButton.addActionListener(new nextListener());
+
+            cardLabel = new JLabel("1", JLabel.CENTER);
+            cardLabel.setFont(new Font("Serif", Font.BOLD, 50));
+            cardLabel.setBackground(Color.pink);
+
+            panel.add(beforeButton);
+            panel.add(decideButton);
+            panel.add(nextButton);
+
+            panel.setSize(350, 100);
+            frame.getContentPane().add(BorderLayout.CENTER, cardLabel);
+            frame.getContentPane().add(BorderLayout.SOUTH, panel);
+            frame.setSize(350, 200);
+            frame.setVisible(true);
+        }
+
+        class beforeListener implements ActionListener{
+            public void actionPerformed(ActionEvent e) {
+                if(cardLabel.getText().equals("1")){
+                    return;
+                }else{
+                    System.out.println(cardList[Arrays.asList(cardList).indexOf(cardLabel.getText())-1]);
+                    cardLabel.setText(cardList[Arrays.asList(cardList).indexOf(cardLabel.getText())-1]);
+                }
+            }
+        }
+
+        class nextListener implements ActionListener{
+            public void actionPerformed(ActionEvent e) {
+                if(cardLabel.getText().equals("50")){
+                    return;
+                }else {
+                    System.out.println(cardList[Arrays.asList(cardList).indexOf(cardLabel.getText())+1]);
+                    cardLabel.setText(cardList[Arrays.asList(cardList).indexOf(cardLabel.getText())+1]);
+                }
+            }
+        }
+
+        class dicisionListener implements ActionListener{
+            public void actionPerformed(ActionEvent e){
+                Board myBoard = new Board(Integer.parseInt(cardLabel.getText()));
+                myBoard.showGUI();
+            }
+        }
+
+        class laserListener implements ActionListener{
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("aaaa");
+
+                card.shootLaser();
+
+                draw.repaint();
+
+                if(card.isWin){
+                    JOptionPane.showMessageDialog(null, "Win !!!");
+                }
+            }
+        }
+
+        class refreshListener extends JPanel implements ActionListener{
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("in refreshListener");
+                String cardFileDir = "./src/Cards/Card" + cardNum + ".txt";
+                System.out.println("file path: "+ cardFileDir);
+                card = null;
+                card = new Card(cardFileDir);
+                card.plot();
+//                draw = new TokensImageDraw(card);
+                draw.repaint();
+            }
+        }
+
+        class solutionListener implements ActionListener{
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("in refreshListener");
+                String cardFileDir = "./src/Cards/Card" + cardNum + "Sol.txt";
+                System.out.println("file path: "+ cardFileDir);
+                card = null;
+                card = new Card(cardFileDir);
+                card.plot();
+//                draw = new TokensImageDraw(card);
+                card.shootLaser();
+                draw.repaint();
+            }
+        }
+
+        class quitListener implements ActionListener{
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                go();
+//                frameToClose.dispose();
+                mainFrame.dispose();
+
+            }
         }
 
         public Token guessToken(int x, int y){
@@ -98,7 +216,9 @@ public class Board implements ActionListener{
 
         @Override
         public void mouseClicked(MouseEvent event) {
+            boolean doubleClicked = false;
             if(event.getClickCount()==2){
+                doubleClicked=true;
                 Point point = event.getPoint();
                 int dX = point.x;
                 int dY = point.y;
@@ -124,6 +244,36 @@ public class Board implements ActionListener{
             event.consume();
             card.laserGoingFullPath.clear();
 
+
+            if(event.getClickCount()==1){
+                Point point = event.getPoint();
+                int dX = point.x;
+                int dY = point.y;
+
+                Token token = guessToken(dX, dY);
+
+                try{
+                    Thread.sleep(300);
+                }catch(InterruptedException ex){
+                    ex.printStackTrace();
+                }
+
+                if (doubleClicked == true){
+                    return;
+                }
+                if(token.getColor().equals("r")){
+                    System.out.println("레이저 버튼 누름");
+
+                    card.shootLaser();
+
+                    draw.repaint();
+
+                    if(card.isWin){
+                        JOptionPane.showMessageDialog(null, "Win !!!");
+                    }
+                }
+            }
+            doubleClicked=false;
         }
 
         @Override

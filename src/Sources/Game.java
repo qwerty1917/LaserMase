@@ -17,21 +17,17 @@ public class Game {
         Game game = new Game();
         game.go();
 
-
         Scanner sc = new Scanner(System.in);
         System.out.println("카드 번호를 선택하십시오");
         int cardNum = sc.nextInt();
-//
-//        Board myBoard = new Board(cardNum);
-//        myBoard.showGUI();
-
     }
-    String[] cardList = {"1","2","3","4","5","20","50"};
+
+    String[] cardList = {"1","2","4","5","20","50"};
 
     JLabel cardLabel;
+    JFrame frame = new JFrame();
 
     public void go(){
-        JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel panel = new JPanel();
         panel.setBackground(Color.darkGray);
@@ -85,8 +81,7 @@ public class Game {
         public void actionPerformed(ActionEvent e){
             Board myBoard = new Board(Integer.parseInt(cardLabel.getText()));
             myBoard.showGUI();
+            frame.dispose();
         }
     }
-
-
 }
