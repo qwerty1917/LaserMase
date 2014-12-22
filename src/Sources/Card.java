@@ -235,23 +235,23 @@ public class Card {
     public void plotBoard(){
         for(int i=0; i<5; i++){
             if(freeTokenTable[i]==null){
-                System.out.print("X");
+//                System.out.print("X");
             }else{
-                System.out.print(freeTokenTable[i].getColor());
+//                System.out.print(freeTokenTable[i].getColor());
             }
         }
-        System.out.println("\n=====");
+//        System.out.println("\n=====");
         for(int i=0; i<5; i++){
             for(int j=0; j<5; j++){
                 if(tokenTable[i][j]==null){
-                    System.out.print("X");
+//                    System.out.print("X");
                 }else{
-                    System.out.print(tokenTable[i][j].getColor());
+//                    System.out.print(tokenTable[i][j].getColor());
                 }
             }
-            System.out.print("\n");
+//            System.out.print("\n");
         }
-        System.out.println("count: " + count);
+//        System.out.println("count: " + count);
         count++;
     }
 
@@ -271,9 +271,12 @@ public class Card {
 
     ArrayList<LaserGoing> laserGoingFullPath = new ArrayList<LaserGoing>();
     boolean isWin = false;
+    int yelloHitCount=0;
 
     public void shootLaser(){
+        isWin=false;
         laserGoingFullPath.clear();
+        yelloHitCount=0;
 
         //// 빨간토큰 찾아서 레이저 정보 추가한다.
         for(int i=0; i<5; i++){
@@ -282,11 +285,11 @@ public class Card {
                     continue;
                 }
                 if(tokenTable[j][i].getColor().equals("r")){
-                    System.out.println("빨간토큰 찾음!: " + i + " "+ j);
+//                    System.out.println("빨간토큰 찾음!: " + i + " "+ j);
                     tokenTable[j][i].setLaserShootDir();
                     laserGoingList.add(new LaserGoing(i, j,
                             tokenTable[j][i].getLaserShootDirs().get(tokenTable[j][i].getLaserShootDirs().size()-1)));
-                    System.out.println("레이저 진행방향 "+tokenTable[j][i].getLaserShootDirs().get(tokenTable[j][i].getLaserShootDirs().size()-1));
+//                    System.out.println("레이저 진행방향 "+tokenTable[j][i].getLaserShootDirs().get(tokenTable[j][i].getLaserShootDirs().size()-1));
                 }
             }
         }
@@ -295,14 +298,14 @@ public class Card {
                 for(int i=0; i<5; i++){
                     for(int j=0; j<5; j++){
                         if(laserGoingList.get(k).fromX==j && laserGoingList.get(k).fromY==i){
-                            System.out.print("O");
+//                            System.out.print("O");
                         }else{
-                            System.out.print("X");
+//                            System.out.print("X");
                         }
                     }
-                    System.out.print("\n");
+//                    System.out.print("\n");
                 }
-                System.out.println("======");
+//                System.out.println("======");
             }
             reflectLaser();
         }
@@ -334,6 +337,10 @@ public class Card {
                 if(tokenTable[i][j]==null){
                     continue;
                 }
+
+                if(tokenTable[i][j].getColor().equals("y")){
+                    yelloHitCount+=tokenTable[i][j].getLaserShootDirs().size();
+                }
                 tokenTable[i][j].clearLaserDetectedDirs();
                 tokenTable[i][j].clearLaserShootDirs();
             }
@@ -353,12 +360,12 @@ public class Card {
                         tokenTable[y][x].addLaserDetectedDir(9);
                         tokenTable[y][x].setLaserShootDir();
 
-                        System.out.println("\n==레이저 경로상 발결된 토큰==");
-                        System.out.println("color is: "+ tokenTable[y][x].getColor());
-                        System.out.println("좌표: x: "+x + " y: "+ y);
-                        System.out.println("hit?: "+ tokenTable[y][x].isHit());
-                        System.out.println("reflect setting → ..");
-                        System.out.println("==이까지==\n");
+//                        System.out.println("\n==레이저 경로상 발결된 토큰==");
+//                        System.out.println("color is: "+ tokenTable[y][x].getColor());
+//                        System.out.println("좌표: x: "+x + " y: "+ y);
+//                        System.out.println("hit?: "+ tokenTable[y][x].isHit());
+//                        System.out.println("reflect setting → ..");
+//                        System.out.println("==이까지==\n");
 
                     }
                 }
@@ -374,12 +381,12 @@ public class Card {
                         tokenTable[y][x].addLaserDetectedDir(12);
                         tokenTable[y][x].setLaserShootDir();
 
-                        System.out.println("\n==레이저 경로상 발결된 토큰==");
-                        System.out.println("color is: "+ tokenTable[y][x].getColor());
-                        System.out.println("좌표: x: "+x + " y: "+ y);
-                        System.out.println("hit?: "+ tokenTable[y][x].isHit());
-                        System.out.println("reflect setting ↓ ..");
-                        System.out.println("==이까지==\n");
+//                        System.out.println("\n==레이저 경로상 발결된 토큰==");
+//                        System.out.println("color is: "+ tokenTable[y][x].getColor());
+//                        System.out.println("좌표: x: "+x + " y: "+ y);
+//                        System.out.println("hit?: "+ tokenTable[y][x].isHit());
+//                        System.out.println("reflect setting ↓ ..");
+//                        System.out.println("==이까지==\n");
 
 
                     }
@@ -396,12 +403,12 @@ public class Card {
                         tokenTable[y][x].addLaserDetectedDir(3);
                         tokenTable[y][x].setLaserShootDir();
 
-                        System.out.println("\n==레이저 경로상 발결된 토큰==");
-                        System.out.println("color is: "+ tokenTable[y][x].getColor());
-                        System.out.println("좌표: x: "+x + " y: "+ y);
-                        System.out.println("hit?: "+ tokenTable[y][x].isHit());
-                        System.out.println("reflect setting → ..");
-                        System.out.println("==이까지==\n");
+//                        System.out.println("\n==레이저 경로상 발결된 토큰==");
+//                        System.out.println("color is: "+ tokenTable[y][x].getColor());
+//                        System.out.println("좌표: x: "+x + " y: "+ y);
+//                        System.out.println("hit?: "+ tokenTable[y][x].isHit());
+//                        System.out.println("reflect setting → ..");
+//                        System.out.println("==이까지==\n");
 
 
                     }
@@ -418,12 +425,12 @@ public class Card {
                         tokenTable[y][x].addLaserDetectedDir(6);
                         tokenTable[y][x].setLaserShootDir();
 
-                        System.out.println("\n==레이저 경로상 발결된 토큰==");
-                        System.out.println("color is: " + tokenTable[y][x].getColor());
-                        System.out.println("좌표: x: "+x + " y: "+ y);
-                        System.out.println("hit?: "+ tokenTable[y][x].isHit());
-                        System.out.println("reflect setting ↑ ..");
-                        System.out.println("==이까지==\n");
+//                        System.out.println("\n==레이저 경로상 발결된 토큰==");
+//                        System.out.println("color is: " + tokenTable[y][x].getColor());
+//                        System.out.println("좌표: x: "+x + " y: "+ y);
+//                        System.out.println("hit?: "+ tokenTable[y][x].isHit());
+//                        System.out.println("reflect setting ↑ ..");
+//                        System.out.println("==이까지==\n");
 
 
                     }
@@ -447,7 +454,10 @@ public class Card {
                     LaserGoing tmpLaserGoing;
 
                     if(tokenTable[j][i].isTarget()){
-                        System.out.println("found target");
+//                        System.out.println("found target");
+                    }
+                    if(yelloHitCount==0){
+
                     }
                     if(tokenTable[j][i].isHit()){
                         hitCount++;
@@ -475,6 +485,21 @@ public class Card {
         laserGoingList.clear();
         for(int i=0; i<tmpLaserGoingList.size(); i++){
             laserGoingList.add(tmpLaserGoingList.get(i));
+        }
+    }
+
+    public void plot(){
+        for(int i=0; i<5; i++){
+            for(int j=0; j<5; j++){
+                if(tokenTable[i][j]!=null){
+                    System.out.print(tokenTable[i][j].getColor());
+                }else if(tokenTable[i][j]==null){
+                    System.out.print("O");
+                }else{
+                    System.out.print("_");
+                }
+            }
+            System.out.print("\n");
         }
     }
 }
